@@ -114,18 +114,26 @@ const createSdk = (): SDK => {
           apiKit[groupName][module.apiInfo.funcName] = (
             config: AxiosRequestConfig
           ) => {
+            const newConfig = {
+              url: module.api.url,
+              method: module.api.method,
+              ...config,
+            };
+
             // @ts-ignore
             if (module.api.useFormUrlEncoded) {
               return request({
                 ...config,
-                data: config.data ? querystring.stringify(config.data) : {},
+                data: newConfig.data
+                  ? querystring.stringify(newConfig.data)
+                  : {},
                 headers: {
-                  ...config.headers,
+                  ...newConfig.headers,
                   "content-type": "application/x-www-form-urlencoded",
                 },
               });
             }
-            return request(config);
+            return request(newConfig);
           };
         }
       );
