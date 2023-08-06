@@ -1,0 +1,39 @@
+{
+  "name": "@api-lang/core",
+  "version": "1.0.0",
+  "description": "The core library of `api-lang`",
+  "main": "./dist/index.js",
+  "typings": "./dist/index.d.ts",
+  "files": [
+    "dist/*",
+    "src/*"
+  ],
+  "scripts": {
+    "build": "npx tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/api-lang/core.git"
+  },
+  "keywords": [
+    "api",
+    "bilibili",
+    "weixin",
+    "wechat",
+    "aml",
+    "api mark language"
+  ],
+  "author": "juln",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/api-lang/core/issues"
+  },
+  "homepage": "https://github.com/api-lang/core#readme",
+  "devDependencies": {
+    "typescript": "^4.7.4"
+  }
+}
