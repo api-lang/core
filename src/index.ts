@@ -1,2 +1,2 @@
 export type { ApiLangModule } from "./basic";
-export { generate, generateWithCompile } from "./generate";
+export { generateTS as generate, generateWithCompile } from "./generate";

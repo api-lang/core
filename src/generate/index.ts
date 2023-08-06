@@ -3,7 +3,7 @@ import path from "path";
 import getSdkFileContent from "./sdkFileContent";
 import { exec } from "child_process";
 
-export const generate = async ({
+export const generateTS = async ({
   apiRootPath,
   build,
 }: {
@@ -28,24 +28,36 @@ export const generate = async ({
 
 export const generateWithCompile = async ({
   apiRootPath,
-  build,
+  cjs,
+  ts,
   cwd,
 }: {
   apiRootPath: string;
-  build: string;
+  cjs: string;
+  ts: string;
   cwd?: string;
 }) => {
+  const _cjs = path.resolve(cjs);
+  const _ts = path.resolve(ts);
+
   const cacheCwd = path.resolve(
     cwd ?? "",
     "node_modules/.cache/api-lang/sdk-dist"
   );
   await fs.ensureDir(cacheCwd);
   await fs.emptyDir(cacheCwd);
-  await generate({ apiRootPath, build: cacheCwd });
+  await generateTS({ apiRootPath, build: cacheCwd });
+
+  console.log("===ts generating: ", _ts);
+  await fs.copy(cacheCwd, ts);
+  console.log("===ts generated: ", _ts);
+
+  console.log("===cjs generating: ", _cjs);
   exec(
     `cd ${cacheCwd} && tsc --init -t esnext -m commonjs --outDir ${path.resolve(
       cwd ?? "",
-      build
+      cjs
     )} && tsc`
   );
+  console.log("===cjs generated: ", _cjs);
 };

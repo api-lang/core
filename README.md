@@ -16,9 +16,4 @@ import type { ApiLangModule } from "@api-lang/core";
 
 `npm i -g @api-lang/core` or `yarn global add @api-lang/core`
 
-`api-lang <apiRootPath> <build> [cwd]`
-
-For example:
-
-- `api-lang ./api-lang ./dist`
-- `api-lang ./api-lang ./dist ./`
+`api-lang -h`
