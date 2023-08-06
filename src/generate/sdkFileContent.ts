@@ -22,6 +22,7 @@ import { wrapper } from "axios-cookiejar-support";
 import { init, interceptors } from "${relativePath}/__api-lang-root__";
 import { IsAny } from "@juln/type-fest";
 import { ApiLangModule } from "@api-lang/core";
+import querystring from "querystring";
 
 type InitArgs = Parameters<typeof init>;
 
@@ -109,7 +110,22 @@ const createSdk = (): SDK => {
             apiKit[groupName] = {};
           }
 
-          apiKit[groupName][module.api.method] = request;
+          apiKit[groupName][module.api.method] = (
+            config: AxiosRequestConfig
+          ) => {
+            // @ts-ignore
+            if (module.api.useFormUrlEncoded) {
+              return request({
+                ...config,
+                data: config.data ? querystring.stringify(config.data) : {},
+                headers: {
+                  ...config.headers,
+                  "content-type": "application/x-www-form-urlencoded",
+                },
+              });
+            }
+            return request(config);
+          };
         }
       );
 
