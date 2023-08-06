@@ -3,7 +3,17 @@
 
 var args = process.argv.slice(2);
 
+if (args[0] === 'help' || args[0] === '--help' || args[0] === '-h') {
+  console.log('api-lang <apiRootPath> <build> [cwd]');
+  process.exit();
+}
+
 var apiRootPath = args[0];
 var build = args[1];
+var cwd = args[2];
 
-require("./dist").generate(apiRootPath, build);
+require("./dist").generateWithCompile({
+  apiRootPath,
+  build,
+  cwd,
+});

@@ -1,8 +1,15 @@
 import fs from "fs-extra";
 import path from "path";
 import getSdkFileContent from "./sdkFileContent";
+import { exec } from "child_process";
 
-const generate = async (apiRootPath: string, build: string) => {
+export const generate = async ({
+  apiRootPath,
+  build,
+}: {
+  apiRootPath: string;
+  build: string;
+}) => {
   const _apiRootPath = path.resolve(apiRootPath);
   const _build = path.resolve(build);
 
@@ -19,9 +26,22 @@ const generate = async (apiRootPath: string, build: string) => {
   ]);
 };
 
-generate(
-  "/Users/juln/workspaces/bili-api/api-lang",
-  "/Users/juln/workspaces/bili-api/build"
-);
-
-export default generate;
+export const generateWithCompile = async ({
+  apiRootPath,
+  build,
+  cwd,
+}: {
+  apiRootPath: string;
+  build: string;
+  cwd?: string;
+}) => {
+  const cacheCwd = `${cwd ?? ""}node_modules/.cache/api-lang`;
+  await fs.emptyDir(cacheCwd);
+  await generate({ apiRootPath, build });
+  exec(
+    `cd ${cacheCwd} && tsc --init -t esnext -m commonjs --outDir ${path.resolve(
+      cwd ?? "",
+      build
+    )}} && tsc`
+  );
+};
