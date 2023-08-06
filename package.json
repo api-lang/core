@@ -1,12 +1,16 @@
 {
   "name": "@api-lang/core",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "The core library of `api-lang`",
   "main": "./dist/index.js",
   "typings": "./dist/index.d.ts",
+  "bin": {
+    "api-lang": "./bin"
+  },
   "files": [
     "dist/*",
-    "src/*"
+    "src/*",
+    "bin"
   ],
   "scripts": {
     "build": "npx tsc",

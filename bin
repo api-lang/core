@@ -1,0 +1,9 @@
+#!/usr/bin/env node
+"use strict";
+
+var args = process.argv.slice(2);
+
+var apiRootPath = args[0];
+var build = args[1];
+
+require("./dist").generate(apiRootPath, build);
