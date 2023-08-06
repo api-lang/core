@@ -18,6 +18,7 @@ const getSdkFileContent = async (
 
   return `
 import axios, { AxiosRequestConfig } from "axios";
+import { wrapper } from "axios-cookiejar-support";
 import { init, interceptors } from "${relativePath}/__api-lang-root__";
 import { IsAny } from "@juln/type-fest";
 import { ApiLangModule } from "@api-lang/core";
@@ -87,7 +88,7 @@ const createSdk = (): SDK => {
       const apiKit: Record<string, any> = {};
 
       const ctx = init(credential);
-      const request = interceptors(axios.create(), ctx);
+      const request = interceptors(wrapper(axios.create()), ctx);
 
       const apiLangModules = await Promise.all([
         ${modules
