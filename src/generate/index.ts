@@ -28,8 +28,8 @@ export const generateTS = async ({
 
 export const generateWithCompile = async ({
   apiRootPath,
-  cjs = "cjs",
-  ts = "ts",
+  cjs = "./cjs",
+  ts = "./ts",
   cwd,
 }: {
   apiRootPath: string;
