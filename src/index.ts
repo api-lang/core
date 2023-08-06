@@ -1,2 +1,2 @@
 export type { ApiLangModule } from "./basic";
-export { sdkFileContent } from "./generate";
+export { default as generate } from "./generate";

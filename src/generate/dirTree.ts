@@ -1,11 +1,13 @@
 import path from "path";
-import fs from "fs-extra";
+import fs from "fs";
+import { relative, getRelativePathWithoutExt } from "../utils/path";
 
 export interface DirTree {
   type: "root" | "group" | "module" | "meta";
   name: string;
   realPath: string;
   relativePath: string;
+  relativePathWithoutExt: string; // 需要加的属性
   children?: DirTree[];
   /** 所属的组 */
   groups?: Omit<DirTree, "children">[];
@@ -20,11 +22,14 @@ export const getDirTree = async (
 ): Promise<DirTree> => {
   const ignoreMeta = !!opts?.ignoreMeta;
 
+  const relativePath = relative(cwd, apiRootPath);
+
   const rootDir: DirTree = {
     type: "root",
     name: path.basename(apiRootPath),
     realPath: apiRootPath,
-    relativePath: path.relative(cwd, apiRootPath),
+    relativePath,
+    relativePathWithoutExt: getRelativePathWithoutExt(relativePath),
     children: [],
   };
 
@@ -37,6 +42,8 @@ export const getDirTree = async (
     for (const file of files) {
       const filePath = path.join(dir.realPath, file);
       const stat = fs.statSync(filePath);
+      const relativePath = relative(cwd, filePath);
+      const relativePathWithoutExt = getRelativePathWithoutExt(relativePath);
 
       if (stat.isDirectory()) {
         const groupFilePath = path.join(filePath, "__group__.ts");
@@ -46,7 +53,8 @@ export const getDirTree = async (
           type: hasGroupFile ? "group" : "module",
           name: file,
           realPath: filePath,
-          relativePath: path.relative(cwd, filePath),
+          relativePath,
+          relativePathWithoutExt,
         };
 
         const childDir: DirTree = {
@@ -66,7 +74,8 @@ export const getDirTree = async (
           type: "meta",
           name: file,
           realPath: filePath,
-          relativePath: path.relative(cwd, filePath),
+          relativePath,
+          relativePathWithoutExt,
         };
 
         if (!ignoreMeta) {
@@ -77,7 +86,8 @@ export const getDirTree = async (
           type: "module",
           name: file,
           realPath: filePath,
-          relativePath: path.relative(cwd, filePath),
+          relativePath: relative(cwd, filePath),
+          relativePathWithoutExt,
           groups: parentGroups,
         };
 
