@@ -46,6 +46,6 @@ export const generateWithCompile = async ({
     `cd ${cacheCwd} && tsc --init -t esnext -m commonjs --outDir ${path.resolve(
       cwd ?? "",
       build
-    )}} && tsc`
+    )} && tsc`
   );
 };
