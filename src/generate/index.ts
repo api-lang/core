@@ -49,10 +49,14 @@ export const generateWithCompile = async ({
   await generateTS({ apiRootPath, build: cacheCwd });
 
   console.log("===ts generating: ", _ts);
+  await fs.ensureDir(_ts);
+  await fs.emptyDir(_ts);
   await fs.copy(cacheCwd, ts);
   console.log("===ts generated: ", _ts);
 
   console.log("===cjs generating: ", _cjs);
+  await fs.ensureDir(_cjs);
+  await fs.emptyDir(_cjs);
   exec(
     `cd ${cacheCwd} && tsc --init -t esnext -m commonjs --outDir ${path.resolve(
       cwd ?? "",
