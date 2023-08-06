@@ -35,10 +35,13 @@ export const generateWithCompile = async ({
   build: string;
   cwd?: string;
 }) => {
-  const cacheCwd = path.resolve(cwd ?? "", "node_modules/.cache/api-lang");
+  const cacheCwd = path.resolve(
+    cwd ?? "",
+    "node_modules/.cache/api-lang/sdk-dist"
+  );
   await fs.ensureDir(cacheCwd);
   await fs.emptyDir(cacheCwd);
-  await generate({ apiRootPath, build });
+  await generate({ apiRootPath, build: cacheCwd });
   exec(
     `cd ${cacheCwd} && tsc --init -t esnext -m commonjs --outDir ${path.resolve(
       cwd ?? "",
