@@ -35,7 +35,8 @@ export const generateWithCompile = async ({
   build: string;
   cwd?: string;
 }) => {
-  const cacheCwd = `${cwd ?? ""}node_modules/.cache/api-lang`;
+  const cacheCwd = path.resolve(cwd ?? "", "node_modules/.cache/api-lang");
+  await fs.ensureDir(cacheCwd);
   await fs.emptyDir(cacheCwd);
   await generate({ apiRootPath, build });
   exec(

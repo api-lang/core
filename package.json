@@ -1,6 +1,6 @@
 {
   "name": "@api-lang/core",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "The core library of `api-lang`",
   "main": "./dist/index.js",
   "typings": "./dist/index.d.ts",
