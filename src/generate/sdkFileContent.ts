@@ -110,7 +110,7 @@ const createSdk = (): SDK => {
             apiKit[groupName] = {};
           }
 
-          apiKit[groupName][module.api.method] = (
+          apiKit[groupName][module.apiInfo.funcName] = (
             config: AxiosRequestConfig
           ) => {
             // @ts-ignore
