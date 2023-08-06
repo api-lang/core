@@ -11,3 +11,11 @@ The core library of `api-lang`
 ```typescript
 import type { ApiLangModule } from "@api-lang/core";
 ```
+
+## cli
+
+`npm i -g @api-lang/core` or `yarn global add @api-lang/core`
+
+`api-lang <apiRootPath> <build>`
+
+For example: `api-lang ./api-lang ./dist`
