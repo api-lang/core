@@ -8,10 +8,10 @@ const cli = cac();
 cli
   .command("gn <apiRootPath>", "generate")
   .option("--cjs [cjs]", "Specify the directory of generated Commonjs products")
-  .option("--ts [ts]", "Specify the directory of generated Typescript products")
+  .option("--es [es]", "Specify the directory of generated Typescript products")
   .option("--cwd [cwd]", "Specify the current workspace dir")
-  .action((apiRootPath, { cjs, ts, cwd }) => {
-    generateWithCompile({ apiRootPath, cjs, ts, cwd });
+  .action((apiRootPath, { cjs, es, cwd }) => {
+    generateWithCompile({ apiRootPath, cjs, es, cwd });
   });
 
 cli.help();

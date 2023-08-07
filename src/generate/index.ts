@@ -29,16 +29,16 @@ export const generateTS = async ({
 export const generateWithCompile = async ({
   apiRootPath,
   cjs = "./cjs",
-  ts = "./ts",
+  es = "./es",
   cwd,
 }: {
   apiRootPath: string;
   cjs?: string;
-  ts?: string;
+  es?: string;
   cwd?: string;
 }) => {
-  const _cjs = path.resolve(cjs);
-  const _ts = path.resolve(ts);
+  const cjsPath = path.resolve(cjs);
+  const esPath = path.resolve(es);
 
   const cacheCwd = path.resolve(
     cwd ?? "",
@@ -48,20 +48,20 @@ export const generateWithCompile = async ({
   await fs.emptyDir(cacheCwd);
   await generateTS({ apiRootPath, build: cacheCwd });
 
-  console.log("===ts generating: ", _ts);
-  await fs.ensureDir(_ts);
-  await fs.emptyDir(_ts);
-  await fs.copy(cacheCwd, ts);
-  console.log("===ts generated: ", _ts);
+  console.log("===es generating: ", esPath);
+  await fs.ensureDir(esPath);
+  await fs.emptyDir(esPath);
+  await fs.copy(cacheCwd, es);
+  console.log("===es generated: ", esPath);
 
-  console.log("===cjs generating: ", _cjs);
-  await fs.ensureDir(_cjs);
-  await fs.emptyDir(_cjs);
+  console.log("===cjs generating: ", cjsPath);
+  await fs.ensureDir(cjsPath);
+  await fs.emptyDir(cjsPath);
   exec(
     `cd ${cacheCwd} && tsc --init -t esnext -m commonjs --outDir ${path.resolve(
       cwd ?? "",
       cjs
     )} && tsc`
   );
-  console.log("===cjs generated: ", _cjs);
+  console.log("===cjs generated: ", cjsPath);
 };
