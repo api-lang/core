@@ -50,6 +50,13 @@ type GroupItem<A extends ApiLangModule> = {
 
 type DataOrNever<T> = IsAny<T> extends true ? never : T;
 type DataOrVoid<T> = IsAny<T> extends true ? void : T;
+type ResultData<T> = IsAny<
+  // @ts-ignore
+  import("${relativePath}/__api-lang-root__").BasicApi
+> extends true
+  ? DataOrVoid<T>
+  : // @ts-ignore
+    DataOrVoid<import("${relativePath}/__api-lang-root__").BasicApi<T>>;
 
 export type ApiKit =
   & {}
@@ -69,7 +76,7 @@ export type ApiKit =
           // @ts-ignore
           ApiData: DataOrNever<import("${module.relativePathWithoutExt}").ApiData>;
           // @ts-ignore
-          ApiResult: DataOrVoid<import("${module.relativePathWithoutExt}").ApiResult>;
+          ApiResult: ResultData<import("${module.relativePathWithoutExt}").ApiResult>;
         }
       >`
         )
