@@ -22,7 +22,7 @@ import { wrapper } from "axios-cookiejar-support";
 import { CookieJar } from "tough-cookie";
 // @ts-ignore
 import { Ctx, init, VERSION } from "${relativePath}/__api-lang-root__";
-import { IsAny } from "@juln/type-fest";
+import { IsAny, IsNever, IsUndefined } from "@juln/type-fest";
 import { ApiLangModule } from "@api-lang/api-utils";
 import querystring from "querystring";
 
@@ -84,6 +84,14 @@ export type ApiKit =
     )
     .join("")}
 
+type Ctx = IsUndefined<
+  // @ts-ignore
+  Parameters<typeof init>[1]
+> extends true
+  ? never
+  : // @ts-ignore
+    Parameters<typeof init>[1];
+
 type SDK = {
   init: IsAny<Ctx> extends true
     ? () => Promise<{
@@ -106,7 +114,11 @@ const sdk: SDK = {
 
     // @ts-ignore
     const _init = init ?? ((axios: AxiosInstance) => axios);
-    const request = _init(wrapper(axios.create({ jar: new CookieJar() })), ctx);
+    const request = _init(
+      wrapper(axios.create({ jar: new CookieJar() })),
+      // @ts-ignore
+      ctx,
+    );
 
     const apiLangModules = await Promise.all([
       ${modules
