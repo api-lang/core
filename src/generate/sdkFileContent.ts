@@ -24,6 +24,8 @@ import {
   init,
   // @ts-ignore
   interceptors,
+  // @ts-ignore
+  VERSION,
 } from "${relativePath}/__api-lang-root__";
 import { IsAny } from "@juln/type-fest";
 import { ApiLangModule } from "@api-lang/api-utils";
@@ -93,72 +95,74 @@ type SDK = {
   init: (...initArgs: InitArgs) => Promise<{
     apiKit: ApiKit;
   }>;
-};
+  // @ts-ignore
+} & (IsAny<typeof VERSION> extends false
+  ? {
+      VERSION: typeof VERSION;
+    }
+  : {});
 
-const createSdk = (): SDK => {
-  return {
-    init: async (credential) => {
-      const apiKit: Record<string, any> = {};
+const sdk: SDK = {
+  init: async (credential) => {
+    const apiKit: Record<string, any> = {};
 
-      const ctx = init(credential);
-      // @ts-ignore
-      const interceptors = interceptors ?? ((axios: AxiosInstance) => axios);
-      const request = interceptors(wrapper(axios.create({ jar: new CookieJar() })), ctx);
+    const ctx = init(credential);
+    // @ts-ignore
+    const interceptors = interceptors ?? ((axios: AxiosInstance) => axios);
+    const request = interceptors(wrapper(axios.create({ jar: new CookieJar() })), ctx);
 
-      const apiLangModules = await Promise.all([
-        ${modules
-          .map(
-            (module) => `
-        {
-          module: await import("${module.relativePathWithoutExt}"),
-          group: await import("${module.groups![0].relativePath}/__group__"),
-        },
-        `
-          )
-          .join("")}
-      ]);
+    const apiLangModules = await Promise.all([
+      ${modules
+        .map(
+          (module) => `
+      {
+        module: await import("${module.relativePathWithoutExt}"),
+        group: await import("${module.groups![0].relativePath}/__group__"),
+      },
+      `
+        )
+        .join("")}
+    ]);
 
-      apiLangModules.forEach(
-        ({ module, group: { GROUP_TS_NAME: groupName } }) => {
-          if (!apiKit[groupName]) {
-            apiKit[groupName] = {};
-          }
-
-          apiKit[groupName][module.apiInfo.funcName] = (
-            config: AxiosRequestConfig
-          ) => {
-            const newConfig = {
-              url: module.api.url,
-              method: module.api.method,
-              ...config,
-            };
-
-            // @ts-ignore
-            if (module.api.useFormUrlEncoded) {
-              return request({
-                ...config,
-                data: newConfig.data
-                  ? querystring.stringify(newConfig.data)
-                  : {},
-                headers: {
-                  ...newConfig.headers,
-                  "content-type": "application/x-www-form-urlencoded",
-                },
-              });
-            }
-            return request(newConfig);
-          };
+    apiLangModules.forEach(
+      ({ module, group: { GROUP_TS_NAME: groupName } }) => {
+        if (!apiKit[groupName]) {
+          apiKit[groupName] = {};
         }
-      );
 
-      return {
-        apiKit: apiKit as ApiKit,
-      };
-    },
-  };
+        apiKit[groupName][module.apiInfo.funcName] = (
+          config: AxiosRequestConfig
+        ) => {
+          const newConfig = {
+            url: module.api.url,
+            method: module.api.method,
+            ...config,
+          };
+
+          // @ts-ignore
+          if (module.api.useFormUrlEncoded) {
+            return request({
+              ...config,
+              data: newConfig.data
+                ? querystring.stringify(newConfig.data)
+                : {},
+              headers: {
+                ...newConfig.headers,
+                "content-type": "application/x-www-form-urlencoded",
+              },
+            });
+          }
+          return request(newConfig);
+        };
+      }
+    );
+
+    return {
+      apiKit: apiKit as ApiKit,
+    };
+  },
+  VERSION,
 };
-
-const sdk = createSdk();
 
 export default sdk;
 
