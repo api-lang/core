@@ -6,7 +6,7 @@ import { exec } from "child_process";
 /** 构建前的准备 */
 const prepare = async (apiRootPath: string) => {
   const apiLangRootFile = path.resolve(apiRootPath, "__api-lang-root__.ts");
-  if (await fs.exists(apiLangRootFile)) {
+  if (!(await fs.exists(apiLangRootFile))) {
     await fs.writeFile(apiLangRootFile, "export {};\n");
   }
 };
