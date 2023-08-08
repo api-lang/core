@@ -22,7 +22,7 @@ import { wrapper } from "axios-cookiejar-support";
 import { CookieJar } from "tough-cookie";
 import { init, interceptors } from "${relativePath}/__api-lang-root__";
 import { IsAny } from "@juln/type-fest";
-import { ApiLangModule } from "@api-lang/core";
+import { ApiLangModule } from "@api-lang/api-utils";
 import querystring from "querystring";
 
 type InitArgs = Parameters<typeof init>;
