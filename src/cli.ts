@@ -6,7 +6,7 @@ import { generateWithCompile } from "./generate";
 const cli = cac();
 
 cli
-  .command("gn <apiRootPath>", "generate")
+  .command("build <apiRootPath>", "generate")
   .option("--cjs [cjs]", "Specify the directory of generated Commonjs products")
   .option("--es [es]", "Specify the directory of generated Typescript products")
   .option("--cwd [cwd]", "Specify the current workspace dir")

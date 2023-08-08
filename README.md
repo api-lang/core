@@ -1,6 +1,6 @@
 # @api-lang/core
 
-The core library of `api-lang`
+提供 `api-lang` 框架的 cli 功能
 
 ## install
 
@@ -17,3 +17,5 @@ import type { ApiLangModule } from "@api-lang/core";
 `npm i -g @api-lang/core` or `yarn global add @api-lang/core`
 
 `api-lang -h`
+
+build: `api-lang build ./api-lang --cjs=./dist --es=./es`
