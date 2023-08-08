@@ -108,8 +108,8 @@ const sdk: SDK = {
 
     const ctx = init(credential);
     // @ts-ignore
-    const interceptors = interceptors ?? ((axios: AxiosInstance) => axios);
-    const request = interceptors(wrapper(axios.create({ jar: new CookieJar() })), ctx);
+    const _interceptors = interceptors ?? ((axios: AxiosInstance) => axios);
+    const request = _interceptors(wrapper(axios.create({ jar: new CookieJar() })), ctx);
 
     const apiLangModules = await Promise.all([
       ${modules
