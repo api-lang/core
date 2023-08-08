@@ -20,18 +20,11 @@ const getSdkFileContent = async (
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 import { wrapper } from "axios-cookiejar-support";
 import { CookieJar } from "tough-cookie";
-import {
-  init,
-  // @ts-ignore
-  interceptors,
-  // @ts-ignore
-  VERSION,
-} from "${relativePath}/__api-lang-root__";
+// @ts-ignore
+import { Ctx, interceptors, VERSION } from "${relativePath}/__api-lang-root__";
 import { IsAny } from "@juln/type-fest";
 import { ApiLangModule } from "@api-lang/api-utils";
 import querystring from "querystring";
-
-type InitArgs = Parameters<typeof init>;
 
 type ApiConfig<A extends ApiLangModule> = Omit<
   AxiosRequestConfig,
@@ -92,9 +85,13 @@ export type ApiKit =
     .join("")}
 
 type SDK = {
-  init: (...initArgs: InitArgs) => Promise<{
-    apiKit: ApiKit;
-  }>;
+  init: IsAny<Ctx> extends true
+    ? () => Promise<{
+        apiKit: ApiKit;
+      }>
+    : (ctx: Ctx) => Promise<{
+        apiKit: ApiKit;
+      }>;
   // @ts-ignore
 } & (IsAny<typeof VERSION> extends false
   ? {
@@ -103,10 +100,10 @@ type SDK = {
   : {});
 
 const sdk: SDK = {
-  init: async (credential) => {
+  // @ts-ignore
+  init: async (ctx) => {
     const apiKit: Record<string, any> = {};
 
-    const ctx = init(credential);
     // @ts-ignore
     const _interceptors = interceptors ?? ((axios: AxiosInstance) => axios);
     const request = _interceptors(wrapper(axios.create({ jar: new CookieJar() })), ctx);
@@ -165,7 +162,6 @@ const sdk: SDK = {
 };
 
 export default sdk;
-
 `;
 };
 
