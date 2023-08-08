@@ -3,6 +3,14 @@ import path from "path";
 import getSdkFileContent from "./sdkFileContent";
 import { exec } from "child_process";
 
+/** 构建前的准备 */
+const prepare = async (apiRootPath: string) => {
+  const apiLangRootFile = path.resolve(apiRootPath, "__api-lang-root__.ts");
+  if (await fs.exists(apiLangRootFile)) {
+    await fs.writeFile(apiLangRootFile, "export {};\n");
+  }
+};
+
 export const generateTS = async ({
   apiRootPath,
   build,
@@ -10,6 +18,8 @@ export const generateTS = async ({
   apiRootPath: string;
   build: string;
 }) => {
+  await prepare(apiRootPath);
+
   const _apiRootPath = path.resolve(apiRootPath);
   const _build = path.resolve(build);
 
