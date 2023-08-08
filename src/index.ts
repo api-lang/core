@@ -1,1 +1,1 @@
-export { generateTS as generate, generateWithCompile } from "./generate";
+export { generateWithCompile } from "./generate";

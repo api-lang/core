@@ -11,22 +11,22 @@ const prepare = async (apiRootPath: string) => {
   }
 };
 
-export const generateTS = async ({
+const generateEsmToCache = async ({
   apiRootPath,
-  build,
+  cacheCwd,
 }: {
   apiRootPath: string;
-  build: string;
+  cacheCwd: string;
 }) => {
   await prepare(apiRootPath);
 
   const _apiRootPath = path.resolve(apiRootPath);
-  const _build = path.resolve(build);
+  const _cacheCwd = path.resolve(cacheCwd);
 
-  await fs.emptyDir(_build);
+  await fs.emptyDir(_cacheCwd);
   const mockCwd = path.resolve(_apiRootPath, "../");
-  const sdkFilePath = path.resolve(_build, "index.ts");
-  const buildApiLangDir = path.resolve(_build, "api-lang");
+  const sdkFilePath = path.resolve(_cacheCwd, "index.ts");
+  const buildApiLangDir = path.resolve(_cacheCwd, "api-lang");
   await fs.emptyDir(buildApiLangDir);
   return Promise.all([
     fs.copy(_apiRootPath, buildApiLangDir),
@@ -56,7 +56,7 @@ export const generateWithCompile = async ({
   );
   await fs.ensureDir(cacheCwd);
   await fs.emptyDir(cacheCwd);
-  await generateTS({ apiRootPath, build: cacheCwd });
+  await generateEsmToCache({ apiRootPath, cacheCwd });
 
   console.log("===es generating: ", esPath);
   await fs.ensureDir(esPath);
