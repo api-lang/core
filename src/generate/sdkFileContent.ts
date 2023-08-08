@@ -21,7 +21,7 @@ import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 import { wrapper } from "axios-cookiejar-support";
 import { CookieJar } from "tough-cookie";
 // @ts-ignore
-import { Ctx, init, VERSION } from "${relativePath}/__api-lang-root__";
+import { init, VERSION } from "${relativePath}/__api-lang-root__";
 import { IsAny, IsNever, IsUndefined } from "@juln/type-fest";
 import { ApiLangModule } from "@api-lang/api-utils";
 import querystring from "querystring";
