@@ -21,7 +21,7 @@ import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 import { wrapper } from "axios-cookiejar-support";
 import { CookieJar } from "tough-cookie";
 // @ts-ignore
-import { Ctx, interceptors, VERSION } from "${relativePath}/__api-lang-root__";
+import { Ctx, init, VERSION } from "${relativePath}/__api-lang-root__";
 import { IsAny } from "@juln/type-fest";
 import { ApiLangModule } from "@api-lang/api-utils";
 import querystring from "querystring";
@@ -105,8 +105,8 @@ const sdk: SDK = {
     const apiKit: Record<string, any> = {};
 
     // @ts-ignore
-    const _interceptors = interceptors ?? ((axios: AxiosInstance) => axios);
-    const request = _interceptors(wrapper(axios.create({ jar: new CookieJar() })), ctx);
+    const _init = init ?? ((axios: AxiosInstance) => axios);
+    const request = _init(wrapper(axios.create({ jar: new CookieJar() })), ctx);
 
     const apiLangModules = await Promise.all([
       ${modules
